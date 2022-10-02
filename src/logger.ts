@@ -51,16 +51,23 @@ export const parseMessage = (messages: any[]) => messages.map(el => {
   return res;
 }).join(' ');
 
-export const logImmediate = (uid: string, ...stringMessage: any[]) => {
+export const logImmediate = (uid: string | null, ...stringMessage: any[]) => {
+  let messageToPrint: string;
+  if (stringMessage.length) {
+    messageToPrint = parseMessage(stringMessage);
+  } else {
+    messageToPrint = uid || 'null message  in logger, smth went wrong';
+  }
   // eslint-disable-next-line no-console
-  console.log(parseMessage(stringMessage));
+  console.log(messageToPrint);
 };
 
-const saveLog = (uid: string, type: MESSAGE_LEVEL_TYPES, messages: string[]) => {
+const saveLog = (uid: string | null, type: MESSAGE_LEVEL_TYPES, messages: string[]) => {
   if (status.singletonConnected) {
-    if (storage[uid]) {
-      storage[uid].objectsToPrint.push({ type, messages });
+    if (!storage[uid || 'null']) {
+      storage[uid || 'null'] = { sourceEvent: null, eventSequence: [], objectsToPrint: [] };
     }
+    storage[uid || 'null'].objectsToPrint.push({ type, messages });
   } else {
     logImmediate(uid, messages);
   }
@@ -104,7 +111,7 @@ const initLogLevels = () => {
   const [d, i, w, e] = Object.values(MESSAGE_LEVEL_TYPES).filter(x => typeof x === 'number')
     .map(type => ((type < minLevelToProcess)
       ? noop
-      : (uid:string, ...messages: string[]) => saveLog(uid, +type, messages)
+      : (uid :string | null, ...messages: string[]) => saveLog(uid, +type, messages)
     ));
   return [d, i, w, e];
 };

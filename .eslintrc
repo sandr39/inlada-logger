@@ -18,6 +18,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
+  "ignorePatterns": ["./dist/*", "./node-modules/"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"

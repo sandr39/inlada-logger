@@ -7,15 +7,15 @@ import { ILogTransportSendFunction, ITransactionService } from './interfaces';
 
 const { NODE_ENV } = process.env as { NODE_ENV: CONFIG_NAMES };
 
-const finalizeOnSuccess = (logTransportSendFunction: ILogTransportSendFunction) => async (uid: string) => {
-  const logsToConsole = prepareSaved(uid, settings.logOnSuccess[NODE_ENV]);
-  const logsToSend = prepareSaved(uid, settings.sendOnSuccess[NODE_ENV]);
+const finalizeAndSend = async (uid: string, levelToSend : number, levelToLog: number, logTransportSendFunction: ILogTransportSendFunction) => {
+  const logsToConsole = prepareSaved(uid, levelToLog);
+  const logsToSend = prepareSaved(uid, levelToSend);
 
   if (logsToSend?.length) {
     await logTransportSendFunction(uid, formatUnifiedResultMessage(uid, logsToSend));
   }
 
-  if (logsToConsole) {
+  if (logsToConsole?.length) {
     // eslint-disable-next-line no-console
     console.log(logsToConsole);
   }
@@ -23,12 +23,14 @@ const finalizeOnSuccess = (logTransportSendFunction: ILogTransportSendFunction) 
   clearSaved(uid);
 };
 
-const finalizeOnFail = (logTransportSendFunction: ILogTransportSendFunction) => async (uid: string) => {
-  await logTransportSendFunction(uid, formatUnifiedResultMessage(uid, prepareSaved(uid, settings.sendOnFail[NODE_ENV])));
+const finalizeOnSuccess = (logTransportSendFunction: ILogTransportSendFunction) => async (uid: string) => {
+  await finalizeAndSend(uid, settings.sendOnSuccess[NODE_ENV], settings.logOnSuccess[NODE_ENV], logTransportSendFunction);
+  await finalizeAndSend('null', settings.sendOnSuccess[NODE_ENV], settings.logOnSuccess[NODE_ENV], logTransportSendFunction);
+};
 
-  // eslint-disable-next-line no-console
-  console.log(prepareSaved(uid, settings.sendOnFail[NODE_ENV]));
-  clearSaved(uid);
+const finalizeOnFail = (logTransportSendFunction: ILogTransportSendFunction) => async (uid: string) => {
+  await finalizeAndSend(uid, settings.sendOnFail[NODE_ENV], settings.logOnFail[NODE_ENV], logTransportSendFunction);
+  await finalizeAndSend('null', settings.sendOnFail[NODE_ENV], settings.logOnFail[NODE_ENV], logTransportSendFunction);
 };
 
 export const loggerTransactionServiceFabric = (logTransportSendFunction: ILogTransportSendFunction): ITransactionService => {

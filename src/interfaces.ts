@@ -1,9 +1,9 @@
 export interface ILogger {
-  debug: (...messages: any) => void,
-  info: (...messages: any) => void,
-  log: (...messages: any) => void,
-  warning: (...messages: any) => void,
-  error: (...messages: any) => void,
+  debug: (uid: string | null, ...messages: any) => void,
+  info: (uid: string | null, ...messages: any) => void,
+  log: (uid: string | null, ...messages: any) => void,
+  warning: (uid: string | null, ...messages: any) => void,
+  error: (uid: string | null, ...messages: any) => void,
 }
 
 export type ILogTransportSendFunction = (uid: string, message: string) => void;
