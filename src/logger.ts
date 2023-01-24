@@ -34,13 +34,16 @@ interface ILoggerSettings {
   logOnFail: Record<CONFIG_NAMES, MESSAGE_LEVEL_TYPES>
   sendOnSuccess: Record<CONFIG_NAMES, MESSAGE_LEVEL_TYPES>
   sendOnFail: Record<CONFIG_NAMES, MESSAGE_LEVEL_TYPES>
+  logTime: boolean
+  serviceName?: string
 }
 
 export const settings: ILoggerSettings = {
+  logTime: false,
   logOnSuccess: LOG_LEVELS_ON_SUCCESS_DEFAULT,
   logOnFail: LOG_LEVELS_ON_FAIL_DEFAULT,
   sendOnSuccess: LOG_LEVELS_TO_SEND_ON_SUCCESS_DEFAULT,
-  sendOnFail: LOG_LEVELS_TO_SEND_ON_FAIL_DEFAULT,
+  sendOnFail: LOG_LEVELS_TO_SEND_ON_FAIL_DEFAULT
 };
 
 export const parseMessage = (messages: any[]) => messages.map(el => {
