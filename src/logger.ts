@@ -43,7 +43,7 @@ export const settings: ILoggerSettings = {
   logOnSuccess: LOG_LEVELS_ON_SUCCESS_DEFAULT,
   logOnFail: LOG_LEVELS_ON_FAIL_DEFAULT,
   sendOnSuccess: LOG_LEVELS_TO_SEND_ON_SUCCESS_DEFAULT,
-  sendOnFail: LOG_LEVELS_TO_SEND_ON_FAIL_DEFAULT
+  sendOnFail: LOG_LEVELS_TO_SEND_ON_FAIL_DEFAULT,
 };
 
 export const parseMessage = (messages: any[]) => messages.map(el => {
@@ -127,6 +127,8 @@ export const updateSettings = (newSetting: ILoggerSettings) => {
   settings.logOnSuccess = newSetting.logOnSuccess;
   settings.sendOnFail = newSetting.sendOnFail;
   settings.sendOnSuccess = newSetting.sendOnSuccess;
+  settings.logTime = newSetting.logTime;
+  settings.serviceName = newSetting.serviceName;
   [debug, info, warning, error] = initLogLevels();
 };
 

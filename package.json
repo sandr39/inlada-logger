@@ -1,6 +1,6 @@
 {
   "name": "inlada-logger",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Transaction-like logger for inlada framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
